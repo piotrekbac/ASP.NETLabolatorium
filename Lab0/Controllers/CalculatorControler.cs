@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Lab0.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Lab0.Controllers;
 
@@ -10,35 +11,18 @@ public class CalculatorController : Controller
         return View();
     }
     
-    public IActionResult Result(double? a, double? b, [FromQuery(Name = "op")]string op)
+    public IActionResult Result(CalculatorModel model)
     {
         
-        // Definiujemy działanie dodawnaia a oraz b
-        string result = "";
-        
         // Sprawdzamy czy a oraz b sa null
-        if (a is null || b is null)
+        if (!model.IsValid())
         {
-            return View("Calculator", "Brak parametru a lub b");
+            return View("Error", "Nie można obliczyć");
         }
         
         // w op może wystapić: add, sub, mul, div
-        switch (op)
-        {
-            case "add": result = $"{a} + {b} = {a + b}";
-                break;
-            case "sub": result = $"{a} - {b} = {a - b}";
-                break;
-            case "mul": result = $"{a} * {b} = {a * b}";
-                break;
-            case "div": result = $"{a} / {b} = {a / b}";
-                break;
-            default:
-                result = "Nieznany operator!";
-                break;
-                
-        }
-        ViewBag.Result = result;
+        
+        ViewBag.Result = model.Result();
         return View();
     }
 }
