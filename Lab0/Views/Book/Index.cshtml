@@ -1,0 +1,19 @@
+﻿@model List<Book>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Książki</h2>
+<a class="btn btn-outline-primary" asp-controller="Book" asp-action="Create">Dodaj</a>
+<h3>Lista</h3>
+
+<ul>
+    @{
+        foreach (var obj in Model)
+        {
+            <li>@obj.Title</li>         // ta właściwość jest dodawana do widocznej listy
+        }
+    }
+</ul>
