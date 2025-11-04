@@ -10,9 +10,11 @@ public class Book
     
     [Required]
     [StringLength(maximumLength: 100, MinimumLength = 2)]
+    [Display(Name="Tytuł")]
     public string? Title { get; set; }
     
     [StringLength(maximumLength: 350, MinimumLength = 2)]
+    [Display(Name="Imię i nazwisko, bądź pseudonim autora")]
     public string? Author { get; set; } 
     
     [Range(minimum:1, maximum: 10000)]

@@ -1,0 +1,12 @@
+﻿@model Book
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Czy na pewno usunąć książkę o tytule @Model.Title?</h2>
+<form asp-action="DeleteConfirm">
+    <input asp-for="Id"/>
+    <button class="btn btn-danger">Usuń</button>
+</form>
