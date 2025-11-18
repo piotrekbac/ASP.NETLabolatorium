@@ -1,7 +1,10 @@
+using Lab0.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IBookService, BookMemoryService>();      // musimy dodać te linijke - POCZĄTEK ZAJĘC LAB6
 
 var app = builder.Build();
 

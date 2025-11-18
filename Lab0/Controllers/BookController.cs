@@ -8,7 +8,7 @@ public class BookController(IBookService service) : Controller
     // GET
     public IActionResult Index()
     {
-        return View();
+        return View(service.GetBooks());        // ważnym było tutaj dodać odpowiednią linijkę service.GetBooks początek LAB06
     }
 
     
