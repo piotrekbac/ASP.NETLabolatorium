@@ -4,7 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IBookService, BookMemoryService>();      // musimy dodać te linijke - POCZĄTEK ZAJĘC LAB6
+
+builder.Services.AddDbContext<AddDbContext>();
+// builder.Services.AddScoped<IBookService, BookMemoryService>();      // musimy dodać te linijki - POCZĄTEK ZAJĘC LAB6
+builder.Services.AddTransient<IBookService, BookDbService>(); 
+
 
 var app = builder.Build();
 
