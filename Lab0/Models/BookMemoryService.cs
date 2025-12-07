@@ -8,7 +8,12 @@ public class BookMemoryService : IBookService
     };
 
     private int i = 2;
-    
+
+    public Task<PagingListAsync<Book>> GetBooksPage(int page, int size)
+    {
+        throw new NotImplementedException();
+    }
+
     public List<Book> GetBooks()
     {
         return _books.Values.ToList();

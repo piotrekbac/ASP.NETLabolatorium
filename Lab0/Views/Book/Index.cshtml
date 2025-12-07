@@ -1,40 +1,76 @@
-﻿@model List<Book>
+﻿@model Lab0.Models.PagingListAsync<Lab0.Models.Book>
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-<h2>Książki</h2>
-<a class="btn btn-outline-primary" asp-controller="Book" asp-action="Create">Dodaj</a>
-<h3>Lista</h3>
+<h1>Lista Książek</h1>
+<p><a asp-action="Create">Dodaj nową</a></p>
 
-@if (Model.Count > 0)
-{
-    <table class="table">
-        <thead> 
-        <th>@Html.DisplayNameFor(model => model[0].Title)</th>
-        <th>@Html.DisplayNameFor(model => model[0].Author)</th>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Tytuł</th>
+        <th>Autor</th>
+        <th>Wydawnictwo</th> 
+        <th>Rok</th>
         <th>Akcje</th>
-        </thead>
-        <tbody>
-        @{
-            foreach (var obj in Model)
-            {
-                <td>@obj.Title</td> // ta właściwość jest dodawana do widocznej 
-                <td>@obj.Author</td>
-                <td>
-                    <a class="btn btn-info" asp-action="Details" asp-route-id="@obj.Id">Szczegóły</a>
-                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@obj.Id">Edycja</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@obj.Id">Usuń</a>
-                </td>
-            }
+    </tr>
+    </thead>
+    <tbody>
+    @await foreach (var item in Model.Data) {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.Author</td>
+            <td>@(item.PublisherEntity?.Name ?? "Brak")</td>
+            <td>@item.YearOfPublishing</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<nav aria-label="Nawigacja po stronach">
+    <ul class="pagination">
+        @if (Model.IsPrevious)
+        {
+            <li class="page-item">
+                <a class="page-link" 
+                   asp-action="Index" 
+                   asp-route-page="@(Model.Page - 1)" 
+                   asp-route-size="@Model.Size">Poprzednia</a>
+            </li>
         }
-        </tbody>
-        
-    </table>
-}
-else
-{
-    <h3 class="text-danger">Brak kontaktów</h3>
-}
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Poprzednia</span>
+            </li>
+        }
+
+        <li class="page-item disabled">
+            <span class="page-link">@Model.Page / @Model.TotalPages</span>
+        </li>
+
+        @if (Model.IsNext)
+        {
+            <li class="page-item">
+                <a class="page-link" 
+                   asp-action="Index" 
+                   asp-route-page="@(Model.Page + 1)" 
+                   asp-route-size="@Model.Size">Następna</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Następna</span>
+            </li>
+        }
+    </ul>
+</nav>

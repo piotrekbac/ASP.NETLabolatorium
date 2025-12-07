@@ -2,6 +2,9 @@
 
 public interface IBookService
 {
+    // dodajemy nową metodę do stronicowania 
+    Task<PagingListAsync<Book>> GetBooksPage(int page, int size);
+    
     // zwracamy liste obiektów
     List<Book> GetBooks();
     

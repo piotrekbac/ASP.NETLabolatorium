@@ -1,24 +1,27 @@
 ﻿using Lab0.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Lab0.Controllers;
 
-public class BookController(IBookService service) : Controller
+[Authorize]
+public class BookController(IBookService service, AddDbContext context) : Controller
 {
-    // GET
-    public IActionResult Index()
+    [AllowAnonymous]
+    public async Task<IActionResult> Index(int page = 1, int size = 10)
     {
-        return View(service.GetBooks());        // ważnym było tutaj dodać odpowiednią linijkę service.GetBooks początek LAB06
+        var pagedResult = await service.GetBooksPage(page, size);
+        return View(pagedResult);
     }
 
-    
-    [HttpGet]       // Wyświetlenie formularza dodania obiektu 
+    [HttpGet]
     public IActionResult Create()
     {
-        return View();  
+        return View();
     }
     
-    [HttpPost]       // Odbiór danych obiektu i zapisanie ich do bazy 
+    [HttpPost]
     public IActionResult Create(Book model)
     {
         if (!ModelState.IsValid)
@@ -27,49 +30,38 @@ public class BookController(IBookService service) : Controller
         }
 
         service.AddBook(model);    
-        return RedirectToAction("Index");   // przejdź do listy obiketów
+        return RedirectToAction("Index");
     }
 
-
+    [AllowAnonymous]
     public IActionResult Details(int id)
     {
         var book = service.GetBookById(id);
-        {
-            if (book is not null)
-            {
-                return View(book);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-    }
-   
-
-    [HttpGet]
-    public IActionResult Edit(int id)
-    {
-        var  book = service.GetBookById(id);
         if (book is not null)
         {
             return View(book);
         }
-        else
-        {
-            return NotFound();
-        }
+        return NotFound();
     }
 
-    [HttpPost] //dodajemy tutaj HttpPost żeby zamiast formularza odbierać żądanie z odpwiednim czasownikiem. Model odpowiada opisowi w formularzu
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var book = service.GetBookById(id);
+        if (book is not null)
+        {
+            return View(book);
+        }
+        return NotFound();
+    }
+
+    [HttpPost]
     public IActionResult Edit(Book model)
     {
-        
         if (!ModelState.IsValid)
         {
             return View(model);
         }
-        // aktualizacja obiektu
         service.UpdateBook(model);     
         return RedirectToAction("Index"); 
     }
@@ -82,17 +74,13 @@ public class BookController(IBookService service) : Controller
         {
             return View(book);
         }
-        else
-        {
-            return NotFound();  // w przypadku jakbyśmy chcieli usunąć coś czego nie ma 
-        }
+        return NotFound();
     }
 
     [HttpPost]
     public IActionResult DeleteConfirm(int id)
     {
         service.DeleteBook(id);
-        return RedirectToAction("Index");   // po akcji wracamy do listy obiektów
+        return RedirectToAction("Index");
     }
-    
 }

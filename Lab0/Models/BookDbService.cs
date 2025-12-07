@@ -2,49 +2,63 @@
 
 namespace Lab0.Models;
 
-public class BookDbService(AddDbContext context, ILogger<BookDbService> logger) : IBookService
+public class BookDbService : IBookService
 {
+    private readonly AddDbContext _context;
+
+    public BookDbService(AddDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<PagingListAsync<Book>> GetBooksPage(int page, int size)
+    {
+        return await PagingListAsync<Book>.CreateAsync(
+            _context.Books
+                .Include(b => b.PublisherEntity)
+                .OrderBy(b => b.Title),
+            page,
+            size);
+    }
+
     public List<Book> GetBooks()
     {
-        return context.Books.ToList();
+        return _context.Books.Include(b => b.PublisherEntity).ToList();
     }
 
     public void AddBook(Book book)
     {
-        context.Books.Add(book);
-        context.SaveChanges();
+        _context.Books.Add(book);
+        _context.SaveChanges();
     }
 
     public bool UpdateBook(Book book)
     {
         try
         {
-            context.Books.Update(book);
-            context.SaveChanges();
+            _context.Books.Update(book);
+            _context.SaveChanges();
+            return true;
         }
-        catch (DbUpdateConcurrencyException e)
-        {
-            logger.LogError(e.Message);
-            return false; 
-        }
-        return  true;
-    }
-
-    public bool DeleteBook(int Id)
-    {
-        var deleted = context.Books.Find(Id);
-        if (deleted == null)
+        catch (DbUpdateConcurrencyException)
         {
             return false;
         }
-        context.Books.Remove(deleted);
-        context.SaveChanges();
+    }
+
+    public bool DeleteBook(int id)
+    {
+        var deleted = _context.Books.Find(id);
+        if (deleted == null) return false;
+        _context.Books.Remove(deleted);
+        _context.SaveChanges();
         return true;
     }
 
-    public Book? GetBookById(int Id)
+    public Book? GetBookById(int id)
     {
-        var book =  context.Books.Find(Id);
-        return book;
+        return _context.Books
+            .Include(b => b.PublisherEntity)
+            .FirstOrDefault(b => b.Id == id);
     }
 }
