@@ -10,12 +10,14 @@ public class BookDbService : IBookService
     {
         _context = context;
     }
-
+    
+    // Metoda asynchroniczna, pobierająca stronę danych - zwraca specjalny obiekt PagingList który obsługuje metdane stronicowania
     public async Task<PagingListAsync<Book>> GetBooksPage(int page, int size)
     {
         return await PagingListAsync<Book>.CreateAsync(
             _context.Books
                 .Include(b => b.PublisherEntity)
+                // pamiętam o sortowaniu podczas stronicowania
                 .OrderBy(b => b.Title),
             page,
             size);

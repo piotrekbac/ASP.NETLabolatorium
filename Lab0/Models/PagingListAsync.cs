@@ -2,6 +2,7 @@
 
 namespace Lab0.Models;
 
+// Klasa pomocnicza dziedzicząca po List<T>, przechowuje metadane o stronicowaniu
 public class PagingListAsync<T>
 {
     public IAsyncEnumerable<T> Data { get; }
@@ -13,7 +14,7 @@ public class PagingListAsync<T>
     public bool IsLast { get; }
     public bool IsNext { get; }
     public bool IsPrevious { get; }
-
+    
     private PagingListAsync(IAsyncEnumerable<T> data, int totalItems, int page, int size)
     {
         TotalItems = totalItems;
@@ -27,6 +28,7 @@ public class PagingListAsync<T>
         Data = data;
     }
 
+    // Definiujemmy metodę fabryczną, wykonującą asynchroniczne zapytania do bazy
     public static async Task<PagingListAsync<T>> CreateAsync(IQueryable<T> source, int page, int size)
     {
         var count = await source.CountAsync();

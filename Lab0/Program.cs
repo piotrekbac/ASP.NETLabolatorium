@@ -2,13 +2,18 @@ using Lab0.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+// Piotr Bacior 15 722 
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Rejestruję serwisy w kontenerze DI
 builder.Services.AddControllersWithViews();
 
+// Konfiguruję kontekst bazy danych z wykorzystaniem SQLite
 builder.Services.AddDbContext<AddDbContext>(options =>
     options.UseSqlite(@"Data Source=d:\data\Books-gr1.db"));
 
+// Konfiguruję moduł Identity (Rejestracja oraz Logowanie)
 builder.Services.AddDefaultIdentity<IdentityUser>(options => 
     {
         options.SignIn.RequireConfirmedAccount = false;
@@ -19,6 +24,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     })
     .AddEntityFrameworkStores<AddDbContext>();
 
+// Używam cyklu życia Transient, co oznacza nową instancję przy każdym żądaniu
 builder.Services.AddTransient<IBookService, BookDbService>();
 
 builder.Services.AddRazorPages();
@@ -36,6 +42,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// W tym miejscu uruchamiam mechanizmy uwierzytelniania oraz autoryzacji 
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lab0.Controllers;
 
+// Kontroler API służący do obsługi zapytań asynchronicznych z JavaScript (Fetch API) - zwraca dane w formacie JSON
 [ApiController]
 [Route("api/publishers")] // URL: /api/publishers
-// w późniejszym etapie testowałem API po tym URL: http://localhost:5123/api/publishers?filter=Ekstra
 public class ApiPublishersController(AddDbContext context) : ControllerBase
 {
     [HttpGet]
     public IActionResult GetPublishers(string? filter)
     {
         var query = context.Publishers.AsQueryable();
-
+        
+        // Prosta logika filtrowania po nazwie dla dynamicznej wyszukiwarki
         if (!string.IsNullOrEmpty(filter))
         {
             query = query.Where(p => p.Name.ToLower().Contains(filter.ToLower()));
