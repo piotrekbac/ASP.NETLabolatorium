@@ -10,11 +10,14 @@ public class PagingListAsync<T>
     public int TotalPages { get; }
     public int Page { get; }
     public int Size { get; }
+    
+    // poniżej znajdują się flagi logiczne ułatwiające obsługę nawigacji w widoku
     public bool IsFirst { get; }
     public bool IsLast { get; }
     public bool IsNext { get; }
     public bool IsPrevious { get; }
     
+    // Prywatny konstruktor - obiekt tworzony tylko przez metodę fabryczną CreateAsync
     private PagingListAsync(IAsyncEnumerable<T> data, int totalItems, int page, int size)
     {
         TotalItems = totalItems;
@@ -35,7 +38,8 @@ public class PagingListAsync<T>
         var items = source.Skip((page - 1) * size).Take(size).AsAsyncEnumerable();
         return new PagingListAsync<T>(items, count, page, size);
     }
-
+    
+    // pomocniczna metoda, obliczająca ile stron nam potrzeba
     private static int CalcTotalPages(int page, int totalItems, int size)
     {
         return totalItems / size + (totalItems % size > 0 ? 1 : 0);
