@@ -42,6 +42,26 @@ Aplikacja webowa stworzona w technologii ASP.NET Core MVC służąca do zarządz
 
 ---
 
+## Konfiguracja bazy danych SQLite
+
+Projekt korzysta z bazy danych SQLite, której plik jest tworzony na dysku **D** w folderze `data`.
+
+> **Uwaga:** Aby aplikacja działała poprawnie, należy **utworzyć folder `data` na dysku D**:
+>
+> ```
+> D:\data
+> ```
+>
+> W tym folderze aplikacja zapisuje plik bazy danych:
+>
+> ```
+> Books-gr1.db
+> ```
+
+Dzięki temu wszystkie dane (książki, wydawnictwa, użytkownicy) będą utrwalane i dostępne po ponownym uruchomieniu aplikacji.
+
+---
+
 ##  Technologie
 *   .NET 8 / 9
 *   ASP.NET Core MVC
