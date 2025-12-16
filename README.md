@@ -31,11 +31,15 @@ Aplikacja webowa stworzona w technologii ASP.NET Core MVC służąca do zarządz
     ```bash
     git checkout FinalCommitGotowyProjektZaliczenie
     ```
-3.  Otwórz terminal w folderze projektu i wykonaj aktualizację bazy danych (migracje są w kodzie):
+3.  Wejdź do katalogu projektu (To bardzo ważne!):
+    ```bash
+    cd Lab0
+    ```
+4.  Wykonaj aktualizację bazy danych:
     ```bash
     dotnet ef database update
     ```
-4.  Uruchom aplikację:
+5.  Uruchom aplikację:
     ```bash
     dotnet run
     ```
